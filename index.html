@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KidPay — Smart UPI Card for Children</title>
+  <meta name="description" content="KidPay - Financially Smart. Safely Connected. Smart UPI card combining payments + GPS safety for kids." />
+  <meta property="og:title" content="KidPay — Smart UPI Card for Children" />
+  <meta property="og:description" content="Financially Smart. Safely Connected. KidPay combines secure UPI payments and GPS safety for kids." />
+  <meta property="og:image" content="images/logo.png" />
+  <meta name="theme-color" content="#06b6d4" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons (only used for small icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="" crossorigin="anonymous">
+
+  <style>
+    /* ---------- VARIABLES & BASE ---------- */
+    :root{
+      --bg: linear-gradient(180deg,#f7fbff,#f1f9f8);
+      --accent-1: #06b6d4; /* teal-blue */
+      --accent-2: #00c853; /* green */
+      --accent-3: #ffb020; /* orange */
+      --muted: #6b7280;
+      --glass: rgba(255,255,255,0.72);
+      --card-shadow: 0 20px 40px rgba(11,22,40,0.12);
+      --radius: 14px;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#0b1220;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      font-size:16px;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;height:auto;display:block}
+
+    /* ---------- NAV ---------- */
+    .nav{
+      position:fixed;
+      top:16px;left:50%;
+      transform:translateX(-50%);
+      width:calc(100% - 40px);
+      max-width:1200px;
+      z-index:60;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 18px;
+      backdrop-filter: blur(6px);
+      background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+      border-radius:999px;
+      box-shadow:0 6px 20px rgba(10,20,40,0.06);
+    }
+    .nav .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .nav .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover}
+    .nav .brand h1{font-family:'Nunito', 'Inter'; font-size:18px;margin:0;color:#052d33}
+    .nav .links{display:flex;gap:18px;align-items:center}
+    .nav .links a{font-weight:600;color:var(--muted);padding:8px 12px;border-radius:10px;transition:all .22s}
+    .nav .links a:hover{background:rgba(6,182,212,0.08); color:var(--accent-1)}
+
+    /* ---------- HERO ---------- */
+    .hero{
+      display:grid;
+      grid-template-columns:1fr 520px;
+      gap:40px;
+      align-items:center;
+      max-width:1200px;
+      margin:120px auto 40px;
+      padding:28px;
+    }
+    .hero-left{
+      padding:30px;
+      border-radius:20px;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:10px;align-items:center;
+      background:linear-gradient(90deg,var(--accent-2),var(--accent-1));
+      color:white;padding:8px 12px;border-radius:999px;font-weight:700;
+      box-shadow:0 8px 30px rgba(3, 105, 117, 0.08);
+      font-size:13px;
+    }
+    .title{
+      font-family:'Nunito';font-size:44px;margin:18px 0 12px;line-height:1.02;color:#072b2d;
+    }
+    .subtitle{color:var(--muted);font-size:18px;margin-bottom:22px}
+    .cta-row{display:flex;gap:14px;align-items:center}
+    .btn{
+      padding:12px 18px;border-radius:12px;font-weight:700;border:0;cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s;
+      box-shadow:0 10px 30px rgba(6,182,212,0.12);
+      background:linear-gradient(90deg,var(--accent-1),#00a6c2);
+      color:white;
+    }
+    .btn:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(6,182,212,0.18)}
+    .btn.secondary{
+      background:transparent;border:2px solid rgba(7,34,36,0.06);color:var(--muted);
+      box-shadow:none;font-weight:700;
+    }
+    .hero-meta{display:flex;gap:18px;margin-top:18px;color:var(--muted);font-weight:600}
+    .hero-meta .meta-item{display:flex;align-items:center;gap:10px; padding:8px 12px;background:rgba(255,255,255,0.6); border-radius:10px;box-shadow:var(--card-shadow)}
+
+    /* ---------- CARD MOCKUP (RIGHT) ---------- */
+    .hero-right{
+      width:100%;
+      display:flex;justify-content:center;align-items:center;
+      perspective:1400px;
+    }
+    .card-wrap{
+      transform-style:preserve-3d;
+      transition:transform .35s cubic-bezier(.2,.9,.2,1);
+      width:420px;height:260px;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .kidcard{
+      width:360px;height:200px;border-radius:18px;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      box-shadow:0 30px 50px rgba(4,40,50,0.18), inset 0 -4px 18px rgba(255,255,255,0.06);
+      transform:translateZ(60px) rotateY(-6deg);
+      position:relative; overflow:hidden; color:white; padding:18px;
+    }
+    .kidcard .chip{
+      width:56px;height:36px;border-radius:8px;background:rgba(255,255,255,0.18);
+      margin-bottom:8px;box-shadow:0 4px 18px rgba(0,0,0,0.12);
+    }
+    .kidcard .name{font-weight:800;font-size:20px;margin-top:12px}
+    .kidcard .meta{font-size:13px;color:rgba(255,255,255,0.92);opacity:0.9}
+    .kidcard .gps-dot{
+      position:absolute;right:12px;top:12px;background:rgba(255,255,255,0.12);padding:8px;border-radius:10px;font-weight:700;
+    }
+    .card-back{
+      position:absolute;left:50%;top:0;transform:translateX(-50%) translateZ(-40px) rotateY(12deg);
+      width:360px;height:200px;border-radius:18px;background:linear-gradient(135deg,#fff,#f1f9f9);
+      box-shadow:0 20px 40px rgba(6, 22, 30, 0.06);display:flex;flex-direction:column;justify-content:center;align-items:center;color:#062b2d;padding:18px;
+      border:2px dashed rgba(6,182,212,0.06);
+    }
+    .card-wrap:hover{transform:rotateY(12deg) translateZ(6px) translateY(-6px)}
+    /* small devices place stacked */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr; margin-top:90px; gap:22px; padding:18px}
+      .nav{left:18px;transform:none; width:calc(100% - 36px)}
+      .card-wrap{width:320px;height:220px}
+      .kidcard{transform:translateZ(60px) rotateY(0)}
+    }
+
+    /* ---------- SECTIONS ---------- */
+    .section{max-width:1200px;margin:30px auto;padding:28px;background:transparent}
+    .container{display:grid;grid-template-columns:repeat(2, 1fr);gap:28px;align-items:center}
+    .section h2{font-family:'Nunito';font-size:28px;margin:6px 0 12px}
+    .muted{color:var(--muted)}
+    .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .feature{background:var(--glass);padding:18px;border-radius:12px;box-shadow:var(--card-shadow);display:flex;gap:12px;align-items:flex-start}
+    .feature i{font-size:24px;color:var(--accent-1);min-width:36px}
+    .howflow{display:flex;gap:14px;align-items:center}
+    .howflow img{width:100%;border-radius:12px;box-shadow:var(--card-shadow)}
+    .stats{display:flex;gap:18px;align-items:center}
+    .stat{background:white;padding:14px;border-radius:12px;text-align:center;box-shadow:0 8px 30px rgba(10,20,40,0.06);min-width:120px}
+    .table-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .table-card{background:white;padding:16px;border-radius:12px;box-shadow:var(--card-shadow);text-align:center}
+    .timeline{display:flex;gap:18px;align-items:center;overflow:auto;padding-bottom:6px}
+    .phase{min-width:220px;background:white;padding:16px;border-radius:12px;box-shadow:var(--card-shadow)}
+    @media (max-width:900px){
+      .container{grid-template-columns:1fr; }
+      .table-cards{grid-template-columns:1fr}
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{max-width:1200px;margin:28px auto;padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));box-shadow:var(--card-shadow)}
+    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:10px;background:rgba(6,182,212,0.08);margin-left:8px}
+
+    /* ---------- ANIMATIONS ---------- */
+    .fade-up{opacity:0;transform:translateY(18px);transition:all .6s cubic-bezier(.16,.8,.24,1)}
+    .fade-up.inview{opacity:1;transform:none}
+    .pop{transform:scale(.98);opacity:0;transition:all .6s cubic-bezier(.16,.8,.24,1)}
+    .pop.inview{transform:scale(1);opacity:1}
+    /* small helper */
+    .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(4,40,50,0.04);font-weight:700;color:#064b4b}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="brand">
+      <img src="logo.jpg" alt="KidPay logo (logo.png)">
+      <div>
+        <h1>KidPay</h1>
+        <div style="font-size:12px;color:var(--muted)">Financially Smart. Safely Connected.</div>
+      </div>
+    </div>
+
+    <div class="links" aria-hidden="false">
+      <a href="#features">How it works</a>
+      <a href="#how">Features</a>
+      <a href="#market">Market</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#contact" class="btn secondary" id="contact-btn">Get in Touch</a>
+    </div>
+  </nav>
+<!-- right: Work structure image -->
+      <div class="fade-up howflow">
+        <img src="logo.jpg" alt="Work structure placeholder (replace images/flow.png)">
+      </div>
+    </div>
+  </section>
+  <!-- HERO -->
+  <header class="hero" id="home">
+    <div class="hero-left fade-up">
+      <div class="kicker"><i class="fa fa-shield-halved" aria-hidden="true"></i> KidPay Pilot</div>
+      <h2 class="title">Smart UPI Card for Children</h2>
+      <p class="subtitle">Financially Smart. Safely Connected. A single card + app that combines secure UPI payments with real-time GPS tracking & parental controls.</p>
+
+      <div class="cta-row">
+        <button class="btn" id="cta-learn">Learn More</button>
+        <button class="btn secondary" id="cta-demo">Request Demo</button>
+      </div>
+
+      <div class="hero-meta">
+        <div class="meta-item"><i class="fa fa-map-marker-alt"></i> Real-time GPS</div>
+        <div class="meta-item"><i class="fa fa-wallet"></i> Secure UPI</div>
+        <div class="meta-item"><i class="fa fa-users"></i> Parent Dashboard</div>
+      </div>
+    </div>
+
+    <div class="hero-right pop">
+      <div class="card-wrap" role="img" aria-label="KidPay sample card">
+        <!-- FRONT CARD -->
+        <div class="kidcard">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="chip" aria-hidden="true"></div>
+            <div class="gps-dot"><i class="fa fa-location-dot"></i> Live</div>
+          </div>
+
+          <div style="margin-top:20px">
+            <div style="font-size:13px;opacity:0.95">KIDPAY • UPI</div>
+            <div class="name">Vishal Kumar</div>
+            <div class="meta">Card • Safe • Limits</div>
+          </div>
+        </div>
+
+        
+
+        <!-- BACK / SIDE -->
+        <div class="card-back" aria-hidden="true">
+          <img src="images/card.png" alt="Card design placeholder (replace images/card.png)" style="max-width:85%; margin-bottom:8px">
+          <div style="font-size:13px;color:#08535a;font-weight:700">Tap to pay • Child-safe mode</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <!-- FEATURES -->
+  <section id="features" class="section">
+    <div class="container">
+      <div>
+        <h2>Core Features</h2>
+        <p class="muted">KidPay combines the features parents want — control, visibility, and safe digital payments — with an experience kids enjoy.</p>
+
+        <div class="feature-grid" style="margin-top:14px">
+          <div class="feature fade-up">
+            <i class="fa fa-location-arrow"></i>
+            <div>
+              <strong>Real-time GPS & Geofencing</strong>
+              <div class="muted">Instant location updates, safe zones, and alerts when a child leaves or enters a zone.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-credit-card"></i>
+            <div>
+              <strong>Secure UPI Payments</strong>
+              <div class="muted">Contactless & PIN-controlled transactions with parental approval and transaction limits.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-chart-line"></i>
+            <div>
+              <strong>Parent App Dashboard</strong>
+              <div class="muted">Spending insights, transaction history, live location, alerts and remote card control.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-sliders-h"></i>
+            <div>
+              <strong>Set Usage Limits & Rewards</strong>
+              <div class="muted">Set daily/weekly allowances and reward good behaviour via integrated points system.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px; display:flex; gap:12px;">
+          <div class="pill">Subscription</div>
+          <div class="pill">Device + App</div>
+          <div class="pill">Payment Gateway</div>
+        </div>
+      </div>
+
+      <!-- right: Work structure image -->
+      <div class="fade-up howflow">
+        <img src="structure.jpg" alt="Work structure placeholder (replace images/flow.png)">
+      </div>
+    </div>
+  </section>
+
+  <!-- right: Work structure image -->
+      <div class="fade-up howflow">
+        <img src="card.jpg" alt="Work structure placeholder (replace images/flow.png)">
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="section" style="margin-top:6px">
+    <div class="container">
+      <div>
+        <h2>How It Works</h2>
+        <p class="muted">Simple data flow for speed, privacy and security.</p>
+
+        <div style="margin-top:18px" class="fade-up">
+          <ol style="padding-left:18px">
+            <li><strong>KidPay Card</strong> — Makes payment & sends GPS data.</li>
+            <li><strong>Cloud Server</strong> — Secure ingestion, encryption & processing.</li>
+            <li><strong>Parent App</strong> — Real-time tracking, spending controls & alerts.</li>
+            <li><strong>Payment Gateway</strong> — UPI settlement & transaction flow.</li>
+          </ol>
+        </div>
+
+        
+        <div style="margin-top:16px" class="muted">Visual flow: <strong>KidPay Card → Cloud Server → Parent App → Payment Gateway</strong></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="stat fade-up">
+          <div style="font-size:20px;font-weight:800">250M+</div>
+          <div class="muted">Children (India, < 15)</div>
+        </div>
+        <div class="stat fade-up">
+          <div style="font-size:20px;font-weight:800">500M+</div>
+          <div class="muted">UPI Users</div>
+        </div>
+        <div class="stat fade-up">
+          <div style="font-size:20px;font-weight:800">High</div>
+          <div class="muted">Parental concern for safety & financial learning</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKET & COMPETITION -->
+  <section id="market" class="section">
+    <div class="container">
+      <div>
+        <h2>Market Opportunity</h2>
+        <p class="muted">Large, growing digital payments adoption + strong parental demand for safety & learning tools makes KidPay primed for rapid adoption.</p>
+
+        <ul style="margin-top:12px;color:var(--muted)">
+          <li>Initial focus: Metro schools & tuition centers for pilot</li>
+          <li>Scale: Tier-2 cities via partnerships & institutional bulk orders</li>
+          <li>Monetization: Subscriptions, transaction fees, device sales</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Competition Overview</h2>
+        <div class="table-cards">
+          <div class="table-card">
+            <strong>Payments</strong>
+            <div class="muted">FamPay, Junio</div>
+            <div style="margin-top:8px">Focus: Money tools — <strong>Missing: Safety</strong></div>
+          </div>
+          <div class="table-card">
+            <strong>GPS</strong>
+            <div class="muted">Jiobit, Noise Kids</div>
+            <div style="margin-top:8px">Focus: Location — <strong>Missing: Payments</strong></div>
+          </div>
+          <div class="table-card" style="background:linear-gradient(90deg,var(--accent-1),var(--accent-2)); color:white">
+            <strong>KidPay</strong>
+            <div style="margin-top:8px;font-weight:700">Combined Payments + Safety</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSINESS MODEL -->
+  <section id="pricing" class="section">
+    <div class="container">
+      <div>
+        <h2>Business Model</h2>
+        <p class="muted">Diversified revenue streams that scale.</p>
+
+        <div style="margin-top:12px" class="feature-grid">
+          <div class="feature fade-up">
+            <i class="fa fa-dollar-sign"></i>
+            <div>
+              <strong>Subscription</strong>
+              <div class="muted">Monthly/Annual plans for families with app & premium features.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-receipt"></i>
+            <div>
+              <strong>Transaction Fee</strong>
+              <div class="muted">Small % per transaction via payment gateway.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-box"></i>
+            <div>
+              <strong>Device Sales</strong>
+              <div class="muted">One-time card/device purchase and institutional bulk orders.</div>
+            </div>
+          </div>
+
+          <div class="feature fade-up">
+            <i class="fa fa-chalkboard-teacher"></i>
+            <div>
+              <strong>Partnerships</strong>
+              <div class="muted">Schools, EdTech & rewards platforms integration.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- right: Work structure image -->
+      <div class="fade-up howflow">
+        <img src="app2.jpg" alt="Work structure placeholder (replace images/flow.png)">
+      </div>
+    </div>
+  </section>
+  
+      <!-- <div>
+        <h2>Roadmap</h2>
+        <div class="timeline fade-up" style="margin-top:12px">
+          <div class="phase">
+            <strong>Phase 1</strong>
+            <div class="muted">Pilot in metros, school partnerships</div>
+          </div>
+          <div class="phase">
+            <strong>Phase 2</strong>
+            <div class="muted">Expand to Tier-2 cities; B2B school offers</div>
+          </div>
+          <div class="phase">
+            <strong>Phase 3</strong>
+            <div class="muted">Integrate rewards & edtech, scale nationally</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div style="max-width:900px;margin:0 auto;background:rgba(255,255,255,0.9);padding:24px;border-radius:12px;box-shadow:var(--card-shadow)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div>
+          <h2>Let's Connect</h2>
+          <p class="muted">Interested in a pilot, demo, or partnership? Reach out to the founder.</p>
+
+          <div style="margin-top:8px">
+            <strong>Vishal Kumar</strong> <br>
+            <span class="muted">Founder, KidPay</span><br>
+            <span class="muted">📞 +91 87970 92609</span><br>
+            <span class="muted">✉️ <a href="mailto:vishalnfskumar@gmail.com">vishalnfskumar@gmail.com</a></span>
+          </div>
+        </div>
+
+        <form id="contactForm" style="min-width:260px;max-width:420px" onsubmit="sendContact(event)">
+          <label class="muted" style="font-weight:700">Message</label>
+          <textarea id="message" required placeholder="Tell us about your interest (pilot, demo, partnership)..." style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(6,182,212,0.08);margin-top:6px"></textarea>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <input id="name" type="text" placeholder="Your name" required style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(6,182,212,0.06)">
+            <input id="email" type="email" placeholder="Email" required style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(6,182,212,0.06)">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+            <button type="submit" class="btn" style="flex:1">Send</button>
+            <button type="button" class="btn secondary" onclick="openWhatsApp()">WhatsApp</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-row">
+      <div>
+        <strong>KidPay</strong> <div class="muted" style="font-size:13px">Smart UPI card for children — Financially Smart. Safely Connected.</div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <div class="socials">
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CONTACT MODAL (hidden) -->
+  <div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,10,0.45);z-index:999">
+    <div style="background:white;padding:18px;border-radius:12px;max-width:640px;width:92%;box-shadow:0 30px 60px rgba(10,20,40,0.5)">
+      <h3>Request Demo</h3>
+      <p class="muted">We’ll schedule a short demo and discuss pilot possibilities for schools & families.</p>
+      <form onsubmit="requestDemo(event)">
+        <input id="demoName" required placeholder="Your name" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(6,182,212,0.06);margin-bottom:8px">
+        <input id="demoEmail" type="email" required placeholder="Email" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(6,182,212,0.06);margin-bottom:8px">
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" onclick="closeModal()" class="btn secondary">Cancel</button>
+          <button type="submit" class="btn">Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ---------- simple intersection observer for inview animations ----------
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('inview');
+      });
+    }, {threshold: 0.12});
+
+    document.querySelectorAll('.fade-up, .pop').forEach(el => io.observe(el));
+
+    // ---------- CTA handlers ----------
+    document.getElementById('cta-learn').addEventListener('click', () => {
+      document.getElementById('features').scrollIntoView({behavior:'smooth'});
+    });
+    document.getElementById('cta-demo').addEventListener('click', () => openModal());
+
+    // contact modal open/close
+    function openModal(){ document.getElementById('modal').style.display = 'flex'; }
+    function closeModal(){ document.getElementById('modal').style.display = 'none'; }
+
+    // handle demo request (no backend) -> opens mailto with content
+    function requestDemo(e){
+      e.preventDefault();
+      const name = document.getElementById('demoName').value.trim();
+      const email = document.getElementById('demoEmail').value.trim();
+      const subject = encodeURIComponent('KidPay Demo Request');
+      const body = encodeURIComponent(`Demo request from ${name} (${email}). Please provide preferred dates/times.`);
+      window.location.href = `mailto:vishalnfskumar@gmail.com?subject=${subject}&body=${body}`;
+      closeModal();
+    }
+
+    // contact form -> mailto fallback
+    function sendContact(e){
+      e.preventDefault();
+      const name = encodeURIComponent(document.getElementById('name').value.trim());
+      const email = encodeURIComponent(document.getElementById('email').value.trim());
+      const message = encodeURIComponent(document.getElementById('message').value.trim());
+      const subject = encodeURIComponent('KidPay Inquiry from Website');
+      const body = encodeURIComponent(`Name: ${decodeURIComponent(name)}\nEmail: ${decodeURIComponent(email)}\n\nMessage:\n${decodeURIComponent(message)}`);
+      window.location.href = `mailto:vishalnfskumar@gmail.com?subject=${subject}&body=${body}`;
+    }
+
+    // WhatsApp quick contact
+    function openWhatsApp(){
+      const phone = '+918797092609';
+      const text = encodeURIComponent("Hello Vishal, I'm interested in KidPay. Please share details about pilot/demo.");
+      window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${text}`, '_blank');
+    }
+
+    // Scroll to contact via nav button
+    document.getElementById('contact-btn').addEventListener('click', (ev) => {
+      ev.preventDefault();
+      document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+    });
+
+    // small: smooth anchor nav
+    document.querySelectorAll('.nav .links a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+      });
+    });
+
+    // keyboard ESC to close modal
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  </script>
+</body>
+</html>
